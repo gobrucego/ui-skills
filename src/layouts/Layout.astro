@@ -7,6 +7,7 @@ type Props = {
 
 const { llmsPath } = Astro.props as Props;
 const currentYear = new Date().getFullYear();
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? "https://ui-skills.com");
 ---
 
 <!doctype html>
@@ -15,11 +16,8 @@ const currentYear = new Date().getFullYear();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
-    />
     <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl.href} />
     <title>
       UI Skills - A set of skills to polish interfaces built by agents
     </title>
