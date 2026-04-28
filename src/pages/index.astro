@@ -1,17 +1,48 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { skills } from "../data/skills";
-import { CopyButton } from "../ui/copy-button";
-import CodeBlock from "../ui/code-block.astro";
-import { InstallTabs } from "../ui/install-tabs";
-import ExpandableCodeBlock from "../ui/expandable-code-block.astro";
+import Button from "../ui/button.astro";
+import SkillCard from "../ui/skill-card.astro";
 
-const skillList = skills as Array<{
-  slug: string;
-  label: string;
-  description?: string;
-  isRegistry?: boolean;
-}>;
+const MAX_SKILLS = 18;
+
+const FEATURED_PATH_SLUGS = [
+  "ibelick/baseline-ui",
+  "ibelick/fixing-accessibility",
+  "ibelick/fixing-motion-performance",
+  "anthropics/frontend-design",
+  "wshobson/wcag-audit-patterns",
+  "emilkowalski/emil-design-eng",
+  "millionco/react-doctor",
+  "shadcn-ui/shadcn",
+  "jakubkrehel/make-interfaces-feel-better",
+  "0xdesign/design-lab",
+  "nextlevelbuilder/ui-ux-pro-max",
+  "dammyjay93/interface-design",
+  "raphaelsalaja/12-principles-of-animation",
+  "pbakaus/impeccable",
+  "bencium/bencium-innovative-ux-designer",
+  "leonxlnx/gpt-tasteskill",
+  "zarazhangrui/frontend-slides",
+  "dimillian/swiftui-ui-patterns",
+] as const;
+
+const skillByPathSlug = new Map(skills.map((skill) => [skill.pathSlug, skill]));
+const isDefined = <T,>(value: T | undefined): value is T => value !== undefined;
+
+const displayedSkills = FEATURED_PATH_SLUGS.map((pathSlug) => skillByPathSlug.get(pathSlug))
+  .filter(isDefined)
+  .slice(0, MAX_SKILLS)
+  .map((skill) => {
+    const owner = skill.sourceKey ?? "ibelick";
+
+    return {
+      ...skill,
+      owner,
+      ownerLabel: skill.sourceLabel ?? "Ibelick",
+      avatarUrl: `https://github.com/${owner}.png?size=40`,
+    };
+  });
 ---
 
 <Layout>
@@ -19,138 +50,58 @@ const skillList = skills as Array<{
     class="relative flex min-h-dvh flex-col items-center justify-end px-0 sm:px-4"
   >
     <div class="relative mt-20 w-full max-w-3xl sm:px-0">
-      <div class="mx-auto flex w-full flex-col gap-16">
+      <div class="mx-auto flex w-full flex-col gap-14">
         <div class="px-4 sm:px-0">
-          <h1 class="text-parchment-900 text-3xl font-medium tracking-tight">
-            UI Skills
-          </h1>
-          <p class="text-parchment-600 mt-3 text-lg">
-            A set of skills to polish interfaces built by agents.
-          </p>
+          <h1 class="sr-only">UI Skills</h1>
+          <div class="relative inline-block overflow-hidden">
+            <pre
+              aria-hidden="true"
+              class="text-parchment-500 font-['Fira_Mono'] text-[12px] leading-[110%] tracking-[-1.5px] whitespace-pre select-none lg:text-[12px]"
+              style="font-weight: 300">{`
+██╗   ██╗██╗    ███████╗██╗  ██╗██╗██╗     ██╗     ███████╗
+██║   ██║██║    ██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝
+██║   ██║██║    ███████╗█████╔╝ ██║██║     ██║     ███████╗
+██║   ██║██║    ╚════██║██╔═██╗ ██║██║     ██║     ╚════██║
+╚██████╔╝██║    ███████║██║  ██╗██║███████╗███████╗███████║
+ ╚═════╝ ╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝
+              `}</pre>
+            <pre
+              aria-hidden="true"
+              class="text-parchment-500/60 absolute top-0 left-0 font-['Fira_Mono'] text-[12px] leading-[110%] tracking-[-1.5px] whitespace-pre select-none lg:text-[12px]"
+              style="font-weight: 300">{`
+██    ██ ██     ███████ ██   ██ ██ ██      ██      ███████ 
+██    ██ ██     ██      ██  ██  ██ ██      ██      ██      
+██    ██ ██     ███████ █████   ██ ██      ██      ███████ 
+██    ██ ██          ██ ██  ██  ██ ██      ██           ██ 
+ ██████  ██     ███████ ██   ██ ██ ███████ ███████ ███████ 
+`}</pre>
+          </div>
+          <p class="text-parchment-600 text-lg">Skills for Design Engineers</p>
         </div>
 
         <div>
           <h2
-            class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0"
+            class="text-parchment-900 mb-4 px-4 text-lg font-medium tracking-tight sm:px-0"
           >
-            Installation
+            Skills
           </h2>
-          <InstallTabs client:load />
-          <p class="text-parchment-500 mt-3 px-4 text-[15px] sm:px-0">
-            Support Claude Code, Cursor, OpenCode and more.
-          </p>
-        </div>
-
-        <div>
-          <h2
-            class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0"
-          >
-            Add a specific skill
-          </h2>
-          <ExpandableCodeBlock
-            lines={skillList.map((skill) => [
-              { text: "npx", className: "text-[#953800]" },
-              { text: " ui-skills", className: "text-[#0a3069]" },
-              { text: " add", className: "text-[#0550ae]" },
-              {
-                text: ` ${skill.slug}`,
-                className: "text-parchment-400",
-              },
-            ])}
-          />
-        </div>
-
-        <div>
-          <h2
-            class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0"
-          >
-            Usage
-          </h2>
-          <div
-            class="relative flex items-center justify-between rounded-none border-t border-b border-neutral-200 bg-white py-3.5 pr-4 pl-6 shadow-2xs sm:rounded-[8px] sm:border-none sm:ring-1 sm:ring-black/10"
-          >
-            <code class="font-mono text-[15px]">
-              <span class="text-[#953800]">/baseline-ui</span>
-              <span class="text-parchment-400"> review src/</span>
-            </code>
-            <div class="flex items-center gap-1">
-              <CopyButton
-                content="/baseline-ui review src/"
-                showText={false}
-                className="size-8"
-                client:load
-              />
-            </div>
+          <div class="grid gap-4 px-4 sm:grid-cols-2 sm:px-0">
+            {
+              displayedSkills.map((skill) => (
+                <SkillCard
+                  href={`/skills/${skill.pathSlug}`}
+                  slug={skill.slug}
+                  description={skill.description}
+                  ownerLabel={skill.ownerLabel}
+                  avatarUrl={skill.avatarUrl}
+                />
+              ))
+            }
+          </div>
+          <div class="mt-4 flex justify-center px-4 sm:px-0">
+            <Button href="/skills"> See all skills </Button>
           </div>
         </div>
-
-         <div>
-           <h2
-             class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0"
-           >
-             Skills
-           </h2>
-           <p class="text-parchment-500 mb-4 px-4 text-[15px] sm:px-0">
-             Foundation skills for design engineering.
-           </p>
-           <div class="grid gap-4 px-4 sm:grid-cols-2 sm:px-0">
-             {
-              skillList
-                .filter((skill) => !skill.isRegistry)
-                 .map((skill) => (
-                   <a
-                     href={`/skills/${skill.slug}`}
-                     class="hover:border-parchment-300 hover:bg-parchment-100 relative flex flex-col justify-between rounded-[12px] border border-neutral-200 bg-transparent px-6 py-4 transition-colors"
-                   >
-                     <div class="flex flex-col gap-1">
-                       <div class="text-parchment-900 font-[450] tracking-tight">
-                         {skill.slug}
-                       </div>
-                       {skill.description ? (
-                         <div class="text-parchment-500 line-clamp-3 text-[14px] leading-snug">
-                           {skill.description}
-                         </div>
-                       ) : null}
-                     </div>
-                   </a>
-                 ))
-             }
-           </div>
-         </div>
-
-         <div>
-           <h2
-             class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0"
-           >
-             Curated Skills
-           </h2>
-           <p class="text-parchment-500 mb-4 px-4 text-[15px] sm:px-0">
-             Best skills for UI work.
-           </p>
-           <div class="grid gap-4 px-4 sm:grid-cols-2 sm:px-0">
-             {
-              skillList
-                .filter((skill) => skill.isRegistry)
-                 .map((skill) => (
-                   <a
-                     href={`/skills/${skill.slug}`}
-                     class="hover:border-parchment-300 hover:bg-parchment-100 relative flex flex-col justify-between rounded-[12px] border border-neutral-200 bg-transparent px-6 py-4 transition-colors"
-                   >
-                     <div class="flex flex-col gap-1">
-                       <div class="text-parchment-900 font-[450] tracking-tight">
-                         {skill.slug}
-                       </div>
-                       {skill.description ? (
-                         <div class="text-parchment-500 line-clamp-3 text-[14px] leading-snug">
-                           {skill.description}
-                         </div>
-                       ) : null}
-                     </div>
-                   </a>
-                 ))
-             }
-           </div>
-         </div>
       </div>
     </div>
   </div>
