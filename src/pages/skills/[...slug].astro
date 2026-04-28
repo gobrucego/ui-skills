@@ -20,6 +20,25 @@ const titleize = (value: string) =>
     .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
     .join(" ");
 
+const rewriteRelativeLinksToRepo = (html: string, baseUrl: string) =>
+  html.replace(/href="([^"]+)"/g, (match, href: string) => {
+    if (
+      href.startsWith("http://") ||
+      href.startsWith("https://") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("#")
+    ) {
+      return match;
+    }
+
+    try {
+      const resolved = new URL(href, baseUrl).toString();
+      return `href="${resolved}"`;
+    } catch {
+      return match;
+    }
+  });
+
 const skillModules = import.meta.glob<MarkdownInstance<SkillFrontmatter>>(
   "/skills/*/SKILL.md",
   { eager: true },
@@ -132,7 +151,8 @@ if (skill?.isRegistry) {
             contentToRender = parts.slice(2).join("---").trim();
           }
         }
-        displayContent = await marked.parse(contentToRender);
+        const parsedHtml = await marked.parse(contentToRender);
+        displayContent = rewriteRelativeLinksToRepo(parsedHtml, registryEntry.githubUrl);
       } else {
         displayContent = `<p>Error: Failed to fetch skill content from ${registryEntry.rawUrl} (${response.status} ${response.statusText})</p>`;
       }
