@@ -1,25 +1,31 @@
 import type { APIRoute } from "astro";
 import { skills } from "../data/skills";
 
-const skillRawModules = import.meta.glob<string>("/skills/*/SKILL.md", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
-
-const skillRawEntries = new Map(
-  Object.entries(skillRawModules).map(([path, raw]) => [
-    path.split("/").at(-2) ?? "",
-    raw,
-  ]),
-);
-
 export const GET: APIRoute = () => {
-  const body = skills
-    .map((skill) => skillRawEntries.get(skill.slug))
-    .filter((raw): raw is string => Boolean(raw))
-    .map((raw) => raw.trim())
-    .join("\n\n")
+  const navigation = [
+    { label: "Home", path: "/" },
+    { label: "Skills", path: "/skills" },
+    { label: "Skills Registry", path: "/skills/registry.txt" },
+  ];
+
+  const skillCatalog = skills
+    .map((skill) => {
+      const description = skill.description ?? "";
+
+      return `- ${skill.label} (${skill.pathSlug})\n  page: /skills/${skill.pathSlug}\n  llms: /skills/${skill.pathSlug}/llms.txt\n  source: ${skill.sourceLabel ?? "Unknown"}\n  description: ${description}`;
+    })
+    .join("\n\n");
+
+  const body = [
+    "# UI Skills",
+    "",
+    "## Site Navigation",
+    ...navigation.map((item) => `- ${item.label}: ${item.path}`),
+    "",
+    "## Skill Catalog",
+    skillCatalog,
+  ]
+    .join("\n")
     .concat("\n");
 
   return new Response(body, {
