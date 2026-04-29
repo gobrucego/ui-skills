@@ -20,9 +20,28 @@ const topicCounts = topics
 
 const designTopics = topicCounts.filter((topic) => topic.isDesignCore);
 const broaderTopics = topicCounts.filter((topic) => !topic.isDesignCore);
+const siteOrigin = Astro.site ?? new URL("https://www.ui-skills.com");
+const topicsPageUrl = new URL("/skills/topics", siteOrigin).toString();
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "UI Skills Topics",
+  description: "Browse all UI Skills topics and jump into filtered skill collections.",
+  url: topicsPageUrl,
+  hasPart: {
+    "@type": "ItemList",
+    itemListElement: topicCounts.map((topic, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: new URL(`/skills/${topic.slug}`, siteOrigin).toString(),
+      name: topic.label,
+    })),
+  },
+};
 ---
 
 <Layout
+  structuredData={structuredData}
   title="Browse Skills by Topic | UI Skills"
   description="Browse all UI Skills topics and jump into filtered skill collections."
 >

@@ -217,9 +217,16 @@ const buildSkillDescription = (entry: Skill) => {
 const buildGroupTitle = (groupName: string) =>
   `${groupName} Skills Directory | UI Skills`;
 
+const buildTopicTitle = (topicLabel: string) =>
+  `${topicLabel} Skills for Design Engineers | UI Skills`;
+
 const buildGroupDescription = (groupName: string, count: number) =>
   shorten(
     `Browse ${count} curated skills from ${groupName}. Discover installation commands and practical guides for your design engineering workflow.`,
+  );
+const buildTopicDescription = (topicLabel: string, description: string, count: number) =>
+  shorten(
+    `${description} Browse ${count} curated ${topicLabel.toLowerCase()} skills for design engineering and frontend workflows.`,
   );
 const structuredData = skill
   ? {
@@ -246,11 +253,14 @@ const structuredData = skill
       keywords: [skill.slug, skill.pathSlug, "design engineering skills"],
     }
   : isGroupPage
-    ? {
+      ? {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         name: `${groupTitle} Skills`,
-        description: `Browse skills from ${groupTitle}.`,
+        description:
+          isTopicGroup && topic
+            ? topic.description
+            : `Browse skills from ${groupTitle}.`,
         url: pageUrl,
         hasPart: {
           "@type": "ItemList",
@@ -281,13 +291,17 @@ const breadcrumbStructuredData = {
 const pageTitle = skill
   ? buildSkillTitle(skill)
   : isGroupPage
-    ? buildGroupTitle(groupTitle)
+    ? isTopicGroup && topic
+      ? buildTopicTitle(topic.label)
+      : buildGroupTitle(groupTitle)
     : "Skills Directory for Design Engineers | UI Skills";
 
 const pageDescription = skill
   ? buildSkillDescription(skill)
   : isGroupPage
-    ? buildGroupDescription(groupTitle, children.length)
+    ? isTopicGroup && topic
+      ? buildTopicDescription(topic.label, topic.description, children.length)
+      : buildGroupDescription(groupTitle, children.length)
     : "Discover skills for design engineers across accessibility, motion, frontend craft, and UI quality.";
 
 let skillRaw = "";
