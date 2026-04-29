@@ -11,18 +11,47 @@ type Props = {
   title?: string;
   description?: string;
   robots?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  twitterImage?: string;
+  twitterImageAlt?: string;
+  twitterSite?: string;
+  ogType?: string;
+  siteName?: string;
 };
 
-const { llmsPath, structuredData, title, description, robots } = Astro.props as Props;
+const {
+  llmsPath,
+  structuredData,
+  title,
+  description,
+  robots,
+  ogImage,
+  ogImageAlt,
+  twitterImage,
+  twitterImageAlt,
+  twitterSite,
+  ogType,
+  siteName,
+} = Astro.props as Props;
 const currentYear = new Date().getFullYear();
 const canonicalUrl = new URL(
   Astro.url.pathname,
-  Astro.site ?? "https://ui-skills.com",
+  Astro.site ?? "https://www.ui-skills.com",
 );
 const pageTitle = title ?? "UI Skills - Skills for Design Engineers";
 const pageDescription = description ?? "Skills for Design Engineers.";
 const robotsContent =
   robots ?? "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
+const ogImageUrl = ogImage ?? "https://www.ui-skills.com/UI-OG.png";
+const twitterImageUrl = twitterImage ?? "https://www.ui-skills.com/UI-OG-X.png";
+const ogImageAltText =
+  ogImageAlt ?? "UI Skills directory preview for design engineers";
+const twitterImageAltText =
+  twitterImageAlt ?? "UI Skills social preview image";
+const ogTypeValue = ogType ?? "website";
+const siteNameValue = siteName ?? "UI Skills";
+const twitterSiteHandle = twitterSite ?? "@ibelick";
 const githubStars = await getGithubStars("ibelick/ui-skills", "7,000+");
 const skillRawModules = import.meta.glob<string>("/skills/*/SKILL.md", {
   eager: true,
@@ -61,12 +90,16 @@ const commandItems = skills.map((skill) => ({
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonicalUrl.href} />
-    <meta property="og:image" content="https://ui-skills.com/UI-OG.png" />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={ogImageAltText} />
+    <meta property="og:type" content={ogTypeValue} />
+    <meta property="og:site_name" content={siteNameValue} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content="https://ui-skills.com/UI-OG-X.png" />
+    <meta name="twitter:image" content={twitterImageUrl} />
+    <meta name="twitter:image:alt" content={twitterImageAltText} />
+    <meta name="twitter:site" content={twitterSiteHandle} />
     {
       structuredData ? (
         <script

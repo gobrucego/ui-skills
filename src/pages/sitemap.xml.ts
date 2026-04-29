@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { skills, type Skill } from "../data/skills";
 
-const SITE_URL = "https://ui-skills.com";
+const SITE_URL = "https://www.ui-skills.com";
 
 const escapeXml = (value: string) =>
   value
@@ -29,7 +29,6 @@ const buildGroupPaths = (allSkills: Skill[]) =>
 
 export const GET: APIRoute = ({ site }) => {
   const origin = site?.origin ?? SITE_URL;
-  const lastmod = new Date().toISOString();
 
   const staticRoutes = ["/", "/skills"];
   const groupRoutes = buildGroupPaths(skills).map((path) => `/skills/${path}`);
@@ -39,7 +38,7 @@ export const GET: APIRoute = ({ site }) => {
   const urlset = allRoutes
     .map((route) => {
       const loc = new URL(route, origin).toString();
-      return `<url><loc>${escapeXml(loc)}</loc><lastmod>${lastmod}</lastmod></url>`;
+      return `<url><loc>${escapeXml(loc)}</loc></url>`;
     })
     .join("");
 

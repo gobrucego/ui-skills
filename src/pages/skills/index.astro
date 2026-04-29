@@ -18,7 +18,7 @@ const mixedSkills = [...skills]
     };
   });
 
-const siteOrigin = Astro.site ?? new URL("https://ui-skills.com");
+const siteOrigin = Astro.site ?? new URL("https://www.ui-skills.com");
 const skillsIndexUrl = new URL("/skills", siteOrigin).toString();
 const structuredData = {
   "@context": "https://schema.org",
@@ -40,8 +40,8 @@ const structuredData = {
 
 <Layout
   structuredData={structuredData}
-  title="All Skills - UI Skills"
-  description="Browse every UI Skill available in the collection, including local and registry skills for design engineering workflows."
+  title="UI Skills Directory for Design Engineers | UI Skills"
+  description="Browse the complete UI Skills directory: curated local and community skills with install commands for accessibility, motion, frontend craft, and design engineering workflows."
 >
   <div
     class="relative flex min-h-dvh flex-col items-center justify-start px-0 sm:px-4"

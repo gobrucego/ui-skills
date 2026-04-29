@@ -130,8 +130,32 @@ const relatedSkills = skill
       .slice(0, 10)
   : [];
 
-const siteOrigin = Astro.site ?? new URL("https://ui-skills.com");
+const siteOrigin = Astro.site ?? new URL("https://www.ui-skills.com");
 const pageUrl = new URL(`/skills/${pathSlug}`, siteOrigin).toString();
+const shorten = (value: string, max = 160) =>
+  value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}...`;
+
+const buildSkillTitle = (entry: Skill) => {
+  const source = entry.sourceLabel ?? "Community";
+  return `${entry.label} Skill - ${source} | UI Skills`;
+};
+
+const buildSkillDescription = (entry: Skill) => {
+  const source = entry.sourceLabel ?? "the community";
+  const description =
+    entry.description ??
+    `Install ${entry.label} from ${source} with a copy-ready command and practical usage guidance.`;
+
+  return shorten(`${description} Install from ${source} in one command.`);
+};
+
+const buildGroupTitle = (groupName: string) =>
+  `${groupName} Skills Directory | UI Skills`;
+
+const buildGroupDescription = (groupName: string, count: number) =>
+  shorten(
+    `Browse ${count} curated skills from ${groupName}. Discover installation commands and practical guides for your design engineering workflow.`,
+  );
 const structuredData = skill
   ? {
       "@context": "https://schema.org",
@@ -154,8 +178,8 @@ const structuredData = skill
       },
       about: ["Design Engineering", "Developer Tools", "AI Skills"],
       keywords: [skill.slug, skill.pathSlug, "design engineering skills"],
-    }
-  : isGroupPage
+      }
+    : isGroupPage
     ? {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -174,17 +198,28 @@ const structuredData = skill
       }
     : undefined;
 
+const breadcrumbStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbItems.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    item: new URL(item.href ?? `/skills/${pathSlug}`, siteOrigin).toString(),
+  })),
+};
+
 const pageTitle = skill
-  ? `${skill.label} - UI Skills`
+  ? buildSkillTitle(skill)
   : isGroupPage
-    ? `${groupTitle} Skills - UI Skills`
-    : "Skills - UI Skills";
+    ? buildGroupTitle(groupTitle)
+    : "Skills Directory for Design Engineers | UI Skills";
 
 const pageDescription = skill
-  ? (skill.description ?? `Install ${skill.label} for your design engineering workflow.`)
+  ? buildSkillDescription(skill)
   : isGroupPage
-    ? `Browse skills from ${groupTitle}.`
-    : "Browse UI Skills.";
+    ? buildGroupDescription(groupTitle, children.length)
+    : "Discover skills for design engineers across accessibility, motion, frontend craft, and UI quality.";
 
 let skillRaw = "";
 let displayContent = "";
@@ -254,7 +289,9 @@ const commandSegments = [
 
 <Layout
   llmsPath={skill ? `/skills/${pathSlug}/llms.txt` : undefined}
-  structuredData={structuredData}
+  structuredData={
+    structuredData ? [structuredData, breadcrumbStructuredData] : breadcrumbStructuredData
+  }
   title={pageTitle}
   description={pageDescription}
 >
