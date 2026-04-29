@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { skills, type Skill } from "../data/skills";
+import { topics } from "../data/topics";
 
 const SITE_URL = "https://www.ui-skills.com";
 
@@ -30,10 +31,13 @@ const buildGroupPaths = (allSkills: Skill[]) =>
 export const GET: APIRoute = ({ site }) => {
   const origin = site?.origin ?? SITE_URL;
 
-  const staticRoutes = ["/", "/skills"];
+  const staticRoutes = ["/", "/skills", "/topics"];
   const groupRoutes = buildGroupPaths(skills).map((path) => `/skills/${path}`);
   const skillRoutes = skills.map((skill) => `/skills/${skill.pathSlug}`);
-  const allRoutes = Array.from(new Set([...staticRoutes, ...groupRoutes, ...skillRoutes]));
+  const topicRoutes = topics.map((topic) => `/topics/${topic.slug}`);
+  const allRoutes = Array.from(
+    new Set([...staticRoutes, ...groupRoutes, ...skillRoutes, ...topicRoutes]),
+  );
 
   const urlset = allRoutes
     .map((route) => {

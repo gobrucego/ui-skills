@@ -9,5 +9,8 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     assetsInclude: ["**/*.sh"],
+    resolve: {
+      dedupe: ["react", "react-dom"],
+    },
   },
 });
