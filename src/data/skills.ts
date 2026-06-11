@@ -21,6 +21,7 @@ export type Skill = {
 };
 
 const localSkillTopics: Record<string, TopicSlug[]> = {
+  "ibelick/ui-skills-root": ["systems", "tooling", "architecture"],
   "ibelick/baseline-ui": ["systems", "visual", "craft"],
   "ibelick/fixing-accessibility": ["accessibility", "testing", "frontend"],
   "ibelick/fixing-metadata": ["architecture", "frontend", "tooling"],
@@ -78,6 +79,9 @@ const registrySkills: Skill[] = registry
 
 export const skills: Skill[] = [...localSkills, ...registrySkills].sort(
   (a, b) => {
+    if (a.slug === "ui-skills-root") return -1;
+    if (b.slug === "ui-skills-root") return 1;
+
     if (a.slug === "baseline-ui") return -1;
     if (b.slug === "baseline-ui") return 1;
 
