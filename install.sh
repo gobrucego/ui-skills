@@ -59,8 +59,8 @@ print_error() {
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-DEFAULT_SKILL="baseline-ui"
-ALL_SKILLS="baseline-ui fixing-accessibility fixing-metadata fixing-motion-performance frontend-design"
+DEFAULT_SKILL="ui-skills-root"
+ALL_SKILLS="ui-skills-root baseline-ui fixing-accessibility fixing-metadata fixing-motion-performance frontend-design"
 UI_SKILLS_BASE_URL="${UI_SKILLS_BASE_URL:-https://ui-skills.com}"
 SKILL_URL_BASE="${UI_SKILLS_BASE_URL%/}/skills"
 REGISTRY_URL="${UI_SKILLS_REGISTRY_URL:-${SKILL_URL_BASE}/registry.txt}"
@@ -439,5 +439,5 @@ if [ "$OPTIONAL_INSTALLED" -eq 0 ]; then
 fi
 
 print_header "Done"
-print_info "Usage: /ui-skills path/to/file.tsx"
+print_info "Usage: /ui-skills-root <task>"
 printf "\n"
