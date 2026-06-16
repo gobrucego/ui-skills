@@ -95,10 +95,10 @@ export default function NewsletterInput({
       <hr className="border-parchment-100 mx-auto my-8 w-1/4 border" />
       <div className="mx-auto w-full max-w-3xl">
         <div className="max-w-xl">
-          <h2 className="text-parchment-900 text-lg font-medium tracking-tight text-balance sm:text-xl">
+          <h2 className="text-parchment-900 text-lg font-medium text-balance">
             {title}
           </h2>
-          <p className="text-parchment-600 mt-2 max-w-lg text-sm leading-6 text-pretty sm:text-[15px]">
+          <p className="text-parchment-600 mt-2 max-w-lg text-base text-pretty">
             {description}
           </p>
         </div>

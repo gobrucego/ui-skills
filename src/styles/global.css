@@ -27,7 +27,7 @@
 
 
 ::selection {
-  background-color: #e1dccf7c;
+  background-color: oklch(0.84 0 0 / 0.5);
   color: inherit;
 }
 

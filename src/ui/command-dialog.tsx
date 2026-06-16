@@ -295,7 +295,7 @@ export function CommandDialog({ items }: CommandDialogProps) {
     <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
       <DialogPrimitive.Trigger
         aria-label="Open skills search"
-        className="hover:bg-parchment-100 text-parchment-700 hover:text-parchment-900 focus-visible:outline-primary inline-flex items-center gap-2 rounded-[6px] border border-transparent bg-transparent px-2.5 py-2 text-[14px] font-[450] tracking-tight transition-colors focus-visible:outline-1 focus-visible:outline-offset-2"
+        className="hover:bg-parchment-100 text-parchment-700 hover:text-parchment-900 focus-visible:outline-primary inline-flex items-center gap-2 rounded-[6px] border border-transparent bg-transparent px-2.5 py-2 text-[14px] font-[450] transition-colors focus-visible:outline-1 focus-visible:outline-offset-2"
       >
         <svg
           aria-hidden="true"
@@ -376,13 +376,12 @@ export function CommandDialog({ items }: CommandDialogProps) {
                   type="button"
                   onClick={() => onSelect(item.pathSlug)}
                   onMouseEnter={() => setActiveIndex(index)}
-                  className={`w-full rounded-[8px] px-3 py-2 text-left transition-colors ${
-                    index === activeIndex
-                      ? "bg-parchment-100"
-                      : "hover:bg-parchment-100"
-                  }`}
+                  className={`w-full rounded-[8px] px-3 py-2 text-left transition-colors ${index === activeIndex
+                    ? "bg-parchment-100"
+                    : "hover:bg-parchment-100"
+                    }`}
                 >
-                  <div className="text-parchment-900 text-sm font-medium tracking-tight">
+                  <div className="text-parchment-900 text-sm font-medium">
                     {highlightText(item.slug, query)}
                   </div>
                   <div className="text-parchment-500 mt-0.5 text-xs">

@@ -37,14 +37,15 @@ const rewriteRelativeLinksToRepo = (html: string, baseUrl: string) =>
     }
   });
 
-
 export function getStaticPaths() {
   const topicGroupPaths = Array.from(
     new Set(skills.flatMap((skill) => skill.topics ?? [])),
   );
   const legacySingleSkillPaths = Array.from(
     skills.reduce((acc, skill) => {
-      const matches = skills.filter((entry: Skill) => entry.slug === skill.slug);
+      const matches = skills.filter(
+        (entry: Skill) => entry.slug === skill.slug,
+      );
       if (matches.length === 1) {
         acc.add(skill.slug);
       }
@@ -201,12 +202,16 @@ const currentSkillIndex = skill
   ? sortedSkills.findIndex((entry: Skill) => entry.pathSlug === skill.pathSlug)
   : -1;
 const previousSkill =
-  skill && currentSkillIndex > 0 ? sortedSkills[currentSkillIndex - 1] : undefined;
+  skill && currentSkillIndex > 0
+    ? sortedSkills[currentSkillIndex - 1]
+    : undefined;
 const nextSkill =
   skill && currentSkillIndex >= 0 && currentSkillIndex < sortedSkills.length - 1
     ? sortedSkills[currentSkillIndex + 1]
     : undefined;
-const previousSkillHref = previousSkill ? `/skills/${previousSkill.pathSlug}` : undefined;
+const previousSkillHref = previousSkill
+  ? `/skills/${previousSkill.pathSlug}`
+  : undefined;
 const nextSkillHref = nextSkill ? `/skills/${nextSkill.pathSlug}` : undefined;
 
 const topicUsageCountBySlug = new Map<TopicSlug, number>();
@@ -277,7 +282,11 @@ const buildGroupDescription = (groupName: string, count: number) =>
   shorten(
     `Browse ${count} curated skills from ${groupName}. Discover installation commands and practical guides for your design engineering workflow.`,
   );
-const buildTopicDescription = (topicLabel: string, description: string, count: number) =>
+const buildTopicDescription = (
+  topicLabel: string,
+  description: string,
+  count: number,
+) =>
   shorten(
     `${description} Browse ${count} curated ${topicLabel.toLowerCase()} skills for design engineering and frontend workflows.`,
   );
@@ -306,7 +315,7 @@ const structuredData = skill
       keywords: [skill.slug, skill.pathSlug, "design engineering skills"],
     }
   : isGroupPage
-      ? {
+    ? {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         name: `${groupTitle} Skills`,
@@ -345,21 +354,21 @@ const pageTitle = skill
   ? buildSkillTitle(skill)
   : isInvalidSkillsRoute
     ? "Skill Page Not Found | UI Skills"
-  : isGroupPage
-    ? isTopicGroup && topic
-      ? buildTopicTitle(topic.label)
-      : buildGroupTitle(groupTitle)
-    : "Skills Directory for Design Engineers | UI Skills";
+    : isGroupPage
+      ? isTopicGroup && topic
+        ? buildTopicTitle(topic.label)
+        : buildGroupTitle(groupTitle)
+      : "Skills Directory for Design Engineers | UI Skills";
 
 const pageDescription = skill
   ? buildSkillDescription(skill)
   : isInvalidSkillsRoute
     ? "The requested skills route does not match any skill, topic, or source page."
-  : isGroupPage
-    ? isTopicGroup && topic
-      ? buildTopicDescription(topic.label, topic.description, children.length)
-      : buildGroupDescription(groupTitle, children.length)
-    : "Discover skills for design engineers across accessibility, motion, frontend craft, and UI quality.";
+    : isGroupPage
+      ? isTopicGroup && topic
+        ? buildTopicDescription(topic.label, topic.description, children.length)
+        : buildGroupDescription(groupTitle, children.length)
+      : "Discover skills for design engineers across accessibility, motion, frontend craft, and UI quality.";
 
 let skillRaw = "";
 let displayContent = "";
@@ -489,7 +498,9 @@ const commandSegments = (() => {
                     description={entry.description}
                     ownerLabel={
                       entry.sourceLabel ??
-                      titleize(entry.sourceKey ?? entry.pathSlug.split("/")[0] ?? "")
+                      titleize(
+                        entry.sourceKey ?? entry.pathSlug.split("/")[0] ?? "",
+                      )
                     }
                     avatarUrl={`https://github.com/${entry.sourceKey ?? entry.pathSlug.split("/")[0]}.png?size=40`}
                   />
@@ -503,7 +514,10 @@ const commandSegments = (() => {
                   </h2>
                   <div class="flex flex-wrap gap-2">
                     {relatedTopicsForTopicPage.map((entry) => (
-                      <TopicTag href={`/skills/${entry.slug}`} label={entry.label} />
+                      <TopicTag
+                        href={`/skills/${entry.slug}`}
+                        label={entry.label}
+                      />
                     ))}
                   </div>
                 </div>
@@ -541,7 +555,10 @@ const commandSegments = (() => {
                       </a>
                     ) : null}
                   </div>
-                  <SkillNav previousHref={previousSkillHref} nextHref={nextSkillHref} />
+                  <SkillNav
+                    previousHref={previousSkillHref}
+                    nextHref={nextSkillHref}
+                  />
                 </div>
                 {skillOwnerKey ? (
                   <a
@@ -569,7 +586,7 @@ const commandSegments = (() => {
               </div>
 
               <div>
-                <h2 class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0">
+                <h2 class="text-parchment-900 mb-3 px-4 text-lg font-medium sm:px-0">
                   Install
                 </h2>
                 <CodeBlock lines={[commandSegments]} align="center" truncate />
@@ -586,7 +603,7 @@ const commandSegments = (() => {
 
               {relatedSkills.length > 0 ? (
                 <div>
-                  <h2 class="text-parchment-900 mb-3 px-4 text-lg font-medium tracking-tight sm:px-0">
+                  <h2 class="text-parchment-900 mb-3 px-4 text-lg font-medium sm:px-0">
                     More from {skill.sourceLabel}
                   </h2>
                   <div class="grid gap-3 px-4 sm:grid-cols-2 sm:px-0">
@@ -595,7 +612,7 @@ const commandSegments = (() => {
                         href={skillHref(entry)}
                         class="hover:border-parchment-300 hover:bg-parchment-100 rounded-[10px] border border-neutral-200 px-4 py-3 transition-colors"
                       >
-                        <div class="text-parchment-900 font-[450] tracking-tight">
+                        <div class="text-parchment-900 font-[450]">
                           {entry.pathSlug}
                         </div>
                         {entry.description ? (
@@ -611,12 +628,15 @@ const commandSegments = (() => {
 
               {skillTopicSuggestions.length > 0 ? (
                 <div class="px-4 sm:px-0">
-                  <h2 class="text-parchment-900 mb-3 text-lg font-medium tracking-tight">
+                  <h2 class="text-parchment-900 mb-3 text-lg font-medium">
                     Explore topics
                   </h2>
                   <div class="flex flex-wrap gap-2">
                     {skillTopicSuggestions.map((entry) => (
-                      <TopicTag href={`/skills/${entry.slug}`} label={entry.label} />
+                      <TopicTag
+                        href={`/skills/${entry.slug}`}
+                        label={entry.label}
+                      />
                     ))}
                   </div>
                 </div>
@@ -628,11 +648,12 @@ const commandSegments = (() => {
         {
           isInvalidSkillsRoute ? (
             <div class="px-4 sm:px-0">
-              <h1 class="text-parchment-900 text-3xl font-medium tracking-tight">
+              <h1 class="text-parchment-900 text-3xl font-medium">
                 Skill page not found
               </h1>
               <p class="text-parchment-500 mt-3 text-[15px]">
-                The route you requested does not match a skill, topic, or source page.
+                The route you requested does not match a skill, topic, or source
+                page.
               </p>
               <div class="mt-5">
                 <a
